@@ -22,7 +22,9 @@ export async function initDb() {
       );
     }
     if (error.code === 'ECONNREFUSED') {
-      throw new Error('MySQL nao esta aceitando conexoes em localhost:3306. Inicie o MySQL Server pelo Workbench, Services ou MySQL Installer.');
+      throw new Error(
+        `MySQL nao esta aceitando conexoes em ${env.db.host}:${env.db.port}. Em producao, configure DB_HOST/DB_PORT com o host publico ou interno do seu banco MySQL gerenciado.`
+      );
     }
     throw error;
   } finally {
