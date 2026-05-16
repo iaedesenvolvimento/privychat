@@ -50,6 +50,10 @@ const router = createBrowserRouter([
       { path: 'chat/:conversationId', element: <Conversation /> },
       { path: 'profile', element: <Profile /> }
     ]
+  },
+  {
+    path: '*',
+    element: <Navigate to="/login" replace />
   }
 ]);
 
