@@ -3,9 +3,10 @@ import { useAuthStore } from '../store/authStore.js';
 
 const configuredApiUrl = import.meta.env.VITE_API_URL;
 const sameOriginApiUrl = `${window.location.origin}/api`;
+const shouldUseSameOrigin = import.meta.env.PROD && window.location.hostname.endsWith('.onrender.com');
 
 export const api = axios.create({
-  baseURL: configuredApiUrl || (import.meta.env.PROD ? sameOriginApiUrl : 'http://localhost:5000/api'),
+  baseURL: shouldUseSameOrigin ? sameOriginApiUrl : configuredApiUrl || (import.meta.env.PROD ? sameOriginApiUrl : 'http://localhost:5000/api'),
   withCredentials: true,
   timeout: 8000
 });

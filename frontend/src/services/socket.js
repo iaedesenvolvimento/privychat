@@ -5,7 +5,8 @@ let socket;
 
 export function getSocket() {
   const { accessToken } = useAuthStore.getState();
-  const socketUrl = import.meta.env.VITE_SOCKET_URL || (import.meta.env.PROD ? window.location.origin : 'http://localhost:5000');
+  const shouldUseSameOrigin = import.meta.env.PROD && window.location.hostname.endsWith('.onrender.com');
+  const socketUrl = shouldUseSameOrigin ? window.location.origin : import.meta.env.VITE_SOCKET_URL || (import.meta.env.PROD ? window.location.origin : 'http://localhost:5000');
   if (!socket) {
     socket = io(socketUrl, {
       autoConnect: false,
