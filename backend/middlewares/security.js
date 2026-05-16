@@ -9,10 +9,15 @@ const isRenderOrigin = (origin = '') => /^https:\/\/[a-z0-9-]+\.onrender\.com$/i
 
 export const corsMiddleware = cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin) || isRenderOrigin(origin)) return callback(null, true);
-    return callback(new Error('Origem nao permitida pelo CORS.'));
+    if (!origin) return callback(null, true);
+    if (env.nodeEnv === 'production') return callback(null, true);
+    if (allowedOrigins.includes(origin) || isRenderOrigin(origin)) return callback(null, true);
+    return callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 204
 });
 
 export const helmetMiddleware = helmet({
