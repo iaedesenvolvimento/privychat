@@ -5,10 +5,11 @@ import { env } from '../config/env.js';
 
 const renderWildcard = 'https://*.onrender.com';
 const allowedOrigins = [env.clientUrl, env.publicApiUrl, env.publicSocketUrl].filter(Boolean);
+const isRenderOrigin = (origin = '') => /^https:\/\/[a-z0-9-]+\.onrender\.com$/i.test(origin);
 
 export const corsMiddleware = cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    if (!origin || allowedOrigins.includes(origin) || isRenderOrigin(origin)) return callback(null, true);
     return callback(new Error('Origem nao permitida pelo CORS.'));
   },
   credentials: true
