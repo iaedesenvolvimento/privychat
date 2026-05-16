@@ -1,6 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import authRoutes from './routes/authRoutes.js';
@@ -13,6 +14,7 @@ import { env } from './config/env.js';
 import { apiLimiter, corsMiddleware, helmetMiddleware } from './middlewares/security.js';
 import { registerChatSocket } from './sockets/chatSocket.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -36,6 +38,13 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/conversations', conversationRoutes);
 app.use('/api/messages', messageRoutes);
+
+const frontendDist = path.resolve(__dirname, '..', 'frontend', 'dist');
+app.use(express.static(frontendDist));
+app.get('*', (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) return next();
+  res.sendFile(path.join(frontendDist, 'index.html'));
+});
 
 app.use((err, _req, res, _next) => {
   console.error(err);
