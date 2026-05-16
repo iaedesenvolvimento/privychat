@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "main": "src/server.js",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "db:init": "node scripts/init-db.js",
     "dev": "nodemon server.js",

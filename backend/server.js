@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import path from 'node:path';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 import authRoutes from './routes/authRoutes.js';
@@ -27,7 +28,8 @@ app.use(corsMiddleware);
 app.use(apiLimiter);
 app.use(express.json({ limit: '15mb' }));
 app.use(cookieParser());
-app.use('/uploads', express.static('uploads'));
+const uploadDir = path.isAbsolute(process.env.UPLOAD_DIR || '') ? process.env.UPLOAD_DIR : path.join(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
+app.use('/uploads', express.static(uploadDir));
 
 app.get('/api/health', (_req, res) => res.json({ ok: true, service: 'PrivyChat API' }));
 app.use('/api/auth', authRoutes);
