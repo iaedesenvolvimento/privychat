@@ -5,8 +5,9 @@ let socket;
 
 export function getSocket() {
   const { accessToken } = useAuthStore.getState();
+  const socketUrl = import.meta.env.VITE_SOCKET_URL || (import.meta.env.PROD ? window.location.origin : 'http://localhost:5000');
   if (!socket) {
-    socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000', {
+    socket = io(socketUrl, {
       autoConnect: false,
       reconnection: true,
       reconnectionAttempts: Infinity,

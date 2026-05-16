@@ -3,6 +3,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { env } from '../config/env.js';
 
+const renderWildcard = 'https://*.onrender.com';
 const allowedOrigins = [env.clientUrl, env.publicApiUrl, env.publicSocketUrl].filter(Boolean);
 
 export const corsMiddleware = cors({
@@ -18,12 +19,12 @@ export const helmetMiddleware = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      connectSrc: ["'self'", ...allowedOrigins, 'ws:', 'wss:'],
+      connectSrc: ["'self'", renderWildcard, ...allowedOrigins, 'ws:', 'wss:'],
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
-      imgSrc: ["'self'", 'data:', 'blob:', ...allowedOrigins],
-      mediaSrc: ["'self'", 'data:', 'blob:', ...allowedOrigins],
+      imgSrc: ["'self'", 'data:', 'blob:', renderWildcard, ...allowedOrigins],
+      mediaSrc: ["'self'", 'data:', 'blob:', renderWildcard, ...allowedOrigins],
       manifestSrc: ["'self'"],
       workerSrc: ["'self'", 'blob:']
     }
