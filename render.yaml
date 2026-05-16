@@ -15,6 +15,10 @@ services:
         value: 10000
       - key: CLIENT_URL
         sync: false
+      - key: PUBLIC_API_URL
+        sync: false
+      - key: PUBLIC_SOCKET_URL
+        sync: false
       - key: UPLOAD_DIR
         value: /var/data/uploads
       - key: DB_HOST

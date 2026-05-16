@@ -6,6 +6,8 @@ export const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   port: Number(process.env.PORT || 5000),
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+  publicApiUrl: process.env.PUBLIC_API_URL || '',
+  publicSocketUrl: process.env.PUBLIC_SOCKET_URL || '',
   db: {
     host: process.env.DB_HOST || 'localhost',
     port: Number(process.env.DB_PORT || 3306),

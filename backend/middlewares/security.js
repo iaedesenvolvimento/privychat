@@ -3,13 +3,31 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { env } from '../config/env.js';
 
+const allowedOrigins = [env.clientUrl, env.publicApiUrl, env.publicSocketUrl].filter(Boolean);
+
 export const corsMiddleware = cors({
-  origin: env.clientUrl,
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('Origem nao permitida pelo CORS.'));
+  },
   credentials: true
 });
 
 export const helmetMiddleware = helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' }
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      connectSrc: ["'self'", ...allowedOrigins, 'ws:', 'wss:'],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+      imgSrc: ["'self'", 'data:', 'blob:', ...allowedOrigins],
+      mediaSrc: ["'self'", 'data:', 'blob:', ...allowedOrigins],
+      manifestSrc: ["'self'"],
+      workerSrc: ["'self'", 'blob:']
+    }
+  }
 });
 
 export const apiLimiter = rateLimit({
